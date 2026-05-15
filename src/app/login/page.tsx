@@ -91,6 +91,9 @@ export default function LoginPage() {
             >
               회원가입
             </Link>
+<Link href="/forgot-password" className="text-sm text-indigo-600 hover:underline">
+  비밀번호를 잊으셨나요?
+</Link>
           </div>
 
           {message && <p className="text-sm text-red-600">{message}</p>}
