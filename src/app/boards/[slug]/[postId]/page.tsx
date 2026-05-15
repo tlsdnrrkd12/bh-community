@@ -5,15 +5,22 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase/client'
 
+type ProfileType =
+  | {
+      nickname: string
+    }
+  | {
+      nickname: string
+    }[]
+  | null
+
 type Post = {
   id: number
   title: string
   content: string
   created_at: string
   user_id: string
-  profiles: {
-    nickname: string
-  } | null
+  profiles: ProfileType
 }
 
 type Comment = {
@@ -21,9 +28,7 @@ type Comment = {
   content: string
   created_at: string
   user_id: string
-  profiles: {
-    nickname: string
-  } | null
+  profiles: ProfileType
 }
 
 export default function PostDetailPage() {
@@ -40,6 +45,16 @@ export default function PostDetailPage() {
   const [commentSubmitting, setCommentSubmitting] = useState(false)
   const [message, setMessage] = useState('')
   const [currentUserId, setCurrentUserId] = useState<string | null>(null)
+
+  const getNickname = (profiles: ProfileType) => {
+    if (!profiles) return '알 수 없음'
+
+    if (Array.isArray(profiles)) {
+      return profiles[0]?.nickname ?? '알 수 없음'
+    }
+
+    return profiles.nickname
+  }
 
   const fetchData = async () => {
     setLoading(true)
@@ -201,7 +216,10 @@ export default function PostDetailPage() {
     return (
       <div className="space-y-6">
         <section className="bg-white rounded-2xl border shadow-sm p-8">
-          <h1 className="text-2xl font-bold mb-2">글을 찾을 수 없습니다.</h1>
+          <h1 className="text-2xl font-bold mb-2">
+            글을 찾을 수 없습니다.
+          </h1>
+
           <p className="text-slate-500">
             삭제되었거나 존재하지 않는 게시글입니다.
           </p>
@@ -240,12 +258,16 @@ export default function PostDetailPage() {
           )}
         </div>
 
-        <p className="text-sm text-slate-400 mb-2">/boards/{slug}/{post.id}</p>
+        <p className="text-sm text-slate-400 mb-2">
+          /boards/{slug}/{post.id}
+        </p>
 
-        <h1 className="text-4xl font-bold tracking-tight mb-4">{post.title}</h1>
+        <h1 className="text-4xl font-bold tracking-tight mb-4">
+          {post.title}
+        </h1>
 
         <div className="flex flex-wrap items-center gap-3 text-sm text-slate-500 mb-8">
-          <span>작성자: {post.profiles?.nickname ?? '알 수 없음'}</span>
+          <span>작성자: {getNickname(post.profiles)}</span>
           <span>·</span>
           <span>{new Date(post.created_at).toLocaleString()}</span>
         </div>
@@ -261,7 +283,9 @@ export default function PostDetailPage() {
         <div className="space-y-4 mb-8">
           {comments.length === 0 ? (
             <div className="rounded-2xl border bg-slate-50 p-6">
-              <p className="text-slate-500">아직 댓글이 없습니다.</p>
+              <p className="text-slate-500">
+                아직 댓글이 없습니다.
+              </p>
             </div>
           ) : (
             comments.map((comment) => (
@@ -273,9 +297,11 @@ export default function PostDetailPage() {
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-3 mb-3 text-sm">
                       <span className="font-semibold text-slate-900">
-                        {comment.profiles?.nickname ?? '알 수 없음'}
+                        {getNickname(comment.profiles)}
                       </span>
+
                       <span className="text-slate-400">·</span>
+
                       <span className="text-slate-500">
                         {new Date(comment.created_at).toLocaleString()}
                       </span>
@@ -288,7 +314,9 @@ export default function PostDetailPage() {
 
                   {currentUserId === comment.user_id && (
                     <button
-                      onClick={() => handleDeleteComment(comment.id)}
+                      onClick={() =>
+                        handleDeleteComment(comment.id)
+                      }
                       className="shrink-0 px-3 py-1.5 rounded-lg border bg-white hover:bg-slate-100 text-sm transition"
                     >
                       삭제
@@ -300,17 +328,24 @@ export default function PostDetailPage() {
           )}
         </div>
 
-        <form onSubmit={handleCommentSubmit} className="space-y-4">
+        <form
+          onSubmit={handleCommentSubmit}
+          className="space-y-4"
+        >
           <textarea
             value={commentText}
-            onChange={(e) => setCommentText(e.target.value)}
+            onChange={(e) =>
+              setCommentText(e.target.value)
+            }
             placeholder="댓글을 입력하세요"
             className="w-full min-h-[120px] rounded-2xl border bg-slate-50 px-4 py-3 outline-none focus:ring-2 focus:ring-slate-300"
           />
 
           <div className="flex items-center justify-between gap-4">
             {message ? (
-              <p className="text-sm text-red-600">{message}</p>
+              <p className="text-sm text-red-600">
+                {message}
+              </p>
             ) : (
               <div />
             )}
@@ -320,7 +355,9 @@ export default function PostDetailPage() {
               disabled={commentSubmitting}
               className="px-5 py-3 rounded-xl bg-slate-900 text-white hover:bg-slate-700 transition disabled:opacity-60"
             >
-              {commentSubmitting ? '등록중...' : '댓글 등록'}
+              {commentSubmitting
+                ? '등록중...'
+                : '댓글 등록'}
             </button>
           </div>
         </form>
