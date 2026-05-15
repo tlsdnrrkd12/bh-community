@@ -153,7 +153,7 @@ export default function Home() {
               자유게시판
             </h2>
             <p className="text-slate-500">
-              자유롭게 글을 남기고 일상, 정보, 생각을 공유하는 공간
+
             </p>
           </div>
         </Link>
@@ -172,7 +172,7 @@ export default function Home() {
               공지사항
             </h2>
             <p className="text-slate-500">
-              운영 공지와 중요한 안내를 확인하는 공간
+
             </p>
           </div>
         </Link>
