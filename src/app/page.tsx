@@ -62,14 +62,13 @@ export default function Home() {
           </span>
 
           <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4 leading-tight">
-            사람들과 자유롭게
+            BHCLUB
             <br />
-            이야기하는 공간
+            커뮤니티
           </h1>
 
           <p className="text-slate-500 text-lg max-w-2xl">
-            글을 쓰고, 댓글로 소통하고, 공지와 정보를 나누는 커뮤니티를
-            만들어보세요.
+
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
