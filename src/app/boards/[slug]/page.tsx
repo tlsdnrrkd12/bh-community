@@ -70,7 +70,7 @@ export default function BoardDetailPage() {
         console.error('게시글 조회 실패:', postError)
         setPosts([])
       } else {
-        setPosts(postData ?? [])
+       setPosts((postData ?? []) as unknown as Post[])
       }
 
       setLoading(false)
